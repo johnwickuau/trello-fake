@@ -202,6 +202,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Elementos para mensagem de parabéns e diário -->
+  <div id="congratulations" style="text-align: center; margin-top: 2rem; display: none; color: #43a047; font-size: 1.2rem; font-weight: bold;">
+    Parabéns! Você concluiu uma tarefa!
+  </div>
+  <div id="diary" style="margin: 2rem auto; max-width: 600px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9;">
+    <h3>Diário de Tarefas Concluídas</h3>
+    <ul id="diary-list" style="list-style: none; padding: 0;"></ul>
+  </div>
+
   <script>
     const columns = ["todo", "in-progress", "done"];
 
@@ -222,9 +232,7 @@
         </div>
       `;
       
-      // Adiciona a tarefa depois do último elemento
       column.appendChild(task);
-      
       input.value = "";
     }
 
@@ -242,8 +250,29 @@
       const newIndex = currentIndex + direction;
       if (newIndex >= 0 && newIndex < columns.length) {
         const newColumn = document.getElementById(columns[newIndex]);
-        newColumn.appendChild(task); // Alterado aqui - agora a tarefa vai para o final da coluna
+        newColumn.appendChild(task);
+
+        // Exibir mensagem de parabéns e registrar no diário se for movido para "done"
+        if (columns[newIndex] === "done") {
+          showCongratulations(task.querySelector("span").textContent);
+        }
       }
+    }
+
+    function showCongratulations(taskText) {
+      const congratulations = document.getElementById("congratulations");
+      const diaryList = document.getElementById("diary-list");
+
+      // Exibir mensagem de parabéns
+      congratulations.style.display = "block";
+      setTimeout(() => {
+        congratulations.style.display = "none";
+      }, 3000);
+
+      // Adicionar tarefa ao diário
+      const listItem = document.createElement("li");
+      listItem.textContent = `✔ ${taskText}`;
+      diaryList.appendChild(listItem);
     }
 
     function allowDrop(event) {
